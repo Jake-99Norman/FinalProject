@@ -1,0 +1,57 @@
+.overflow-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.overflow-modal {
+  background-color: white;
+  width: 90%;
+  max-width: 420px;
+  max-height: 60vh; /* make it slightly bigger if needed */
+  border-radius: 6px;
+  overflow-y: auto; /* allow scrolling if too many events */
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.overflow-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.overflow-events-name {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.day-events-item {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 0.6rem; /* space between events */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  color: white; /* text color to contrast with background color */
+}
+
+/* Example colors (adjust as needed) */
+.event-red { background-color: hsl(0, 70%, 50%); }
+.event-blue { background-color: hsl(210, 70%, 50%); }
+.event-green { background-color: hsl(120, 70%, 40%); }
+.event-yellow { background-color: hsl(50, 90%, 50%); }
+
+.day-events-item:hover {
+  transform: scale(1.03);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
