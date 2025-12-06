@@ -1,0 +1,323 @@
+* {
+    box-sizing: border-box;
+}
+:root {
+  --red-event: hsl(0, 75%, 60%);
+  --blue-event: hsl(200, 80%, 50%);
+  --green-event: hsl(150, 80%, 30%);
+  --button-border: #dadce0;
+  --outside-month-bg: #dadce0;
+  --default-text: #333;
+  --button-hover-bg: #f1f3f4;
+
+  --delete-btn-border: hsl(0, 75%, 60%);
+  --delete-btn-bg: hsl(0, 75%, 95%);
+  --delete-btn-text: hsl(0, 75%, 10%);
+  --delete-btn-hover-bg: hsl(0, 75%, 90%);
+
+  --save-btn-border: hsl(150, 80%, 30%);
+  --save-btn-bg: hsl(150, 80%, 95%);
+  --save-btn-text: hsl(150, 80%, 10%);
+  --save-btn-hover-bg: hsl(150, 80%, 90%);
+
+  --weekname-text: #777;
+  --today-bg: hsl(200, 80%, 50%);
+  --today-text: white;
+  --all-day-text: white;
+  --timed-event-text: #777;
+  --modal-date-text: #555;
+  --modal-label-text: #777;
+}
+
+/* ==============================
+   LAYOUT
+============================== */
+.calendar-layout {
+  min-height: 100vh;                /* full viewport height */
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  box-sizing: border-box;
+  background: #f7f7f7;
+  overflow: hidden;             /* prevent scrollbar */
+}
+
+.calendarHeader {
+  flex: 0 0 auto;               /* header takes only content space */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  flex-wrap: wrap; 
+  padding: .25rem 0.5rem;
+}
+
+.calendarHeader h2 {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0rem;
+}
+
+.calendarHeader button {
+  border-radius: 6px;
+  border: 1px solid var(--button-border);
+  background: transparent;
+  color: var(--default-text);
+  cursor: pointer;
+  margin-top: 0; 
+  padding: 6px 10px;
+  transition: background 0.2s;
+  font-weight: 800;
+}
+
+.calendarHeader button:hover {
+  background: var(--button-hover-bg);
+}
+
+.calendar-body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==============================
+   WEEKDAY NAMES
+============================== */
+.calendar-weekday {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--weekname-text);
+}
+
+/* ==============================
+   CALENDAR GRID
+============================== */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);  /* 7 equal columns */
+  grid-auto-rows: minmax(100px, auto);
+  height: 100%;                           /* fill remaining space */
+  width: 100%;
+}
+
+.day-cell {
+  background-color: #fafafa;
+  padding: 6px;
+  cursor: pointer;
+  position: relative;
+  border: 1px solid var(--button-border);
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 1 / 1;                     /* perfect squares */
+  overflow: hidden;
+}
+
+.day-cell:hover {
+  background-color: #efefef;
+}
+
+.day-number {
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+}
+
+.day-number.today {
+  background: var(--today-bg);
+  color: var(--today-text);
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.outside-month {
+  background-color: var(--outside-month-bg);
+  opacity: 0.35;
+}
+
+.selected {
+  outline: 2px solid var(--blue-event);
+  background: hsl(200, 80%, 95%);
+}
+
+/* ==============================
+   EVENTS
+============================== */
+.day-event-dot {
+  font-size: 10px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  z-index: 1;
+  color: var(--all-day-text);
+}
+
+.day-event-dot.red { background-color: var(--red-event); }
+.day-event-dot.blue { background-color: var(--blue-event); }
+.day-event-dot.green { background-color: var(--green-event); }
+
+.day-event-more {
+  font-size: 10px;
+  color: var(--blue-event);
+  cursor: pointer;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 1;
+}
+
+/* ==============================
+   ADD EVENT FAB
+============================== */
+.add-event-fab {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--blue-event);
+  color: white;
+  font-size: 20px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  transition: 0.15s ease;
+  z-index: 2;
+}
+
+.day-cell:hover .add-event-fab { display: flex; }
+
+.add-event-fab:hover { background-color: hsl(200, 80%, 40%); }
+
+/* ==============================
+   MODAL
+============================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.modal h2 { margin-bottom: 8px; }
+
+.modal-date {
+  font-size: 14px;
+  color: var(--modal-date-text);
+  margin-bottom: 12px;
+}
+
+.time-row, .color-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.time-row label, .color-row label {
+  font-size: 12px;
+  display: block;
+  margin-bottom: 2px;
+  color: var(--modal-label-text);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.modal-actions button[type="submit"] {
+  border: 1px solid var(--save-btn-border);
+  background: var(--save-btn-bg);
+  color: var(--save-btn-text);
+}
+
+.modal-actions button[type="submit"]:hover { background: var(--save-btn-hover-bg); }
+
+.delete-btn {
+  border: 1px solid var(--delete-btn-border);
+  background: var(--delete-btn-bg);
+  color: var(--delete-btn-text);
+}
+
+.delete-btn:hover { background: var(--delete-btn-hover-bg); }
+
+/* ==============================
+   COLOR PICKER DOTS
+============================== */
+.color-options {
+  display: flex;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.color-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px 6px;
+  border-radius: 50%;
+  transition: transform 0.1s;
+}
+
+.color-btn:hover { transform: scale(1.2); }
+.color-btn.red { color: var(--red-event); }
+.color-btn.blue { color: var(--blue-event); }
+.color-btn.green { color: var(--green-event); }
+.color-btn.selected { font-weight: bold; }
+
+/* ==============================
+   RESPONSIVE
+============================== */
+@media (max-width: 768px) {
+  .day-number { font-size: 12px; }
+  .day-event-dot, .day-event-more { font-size: 9px; }
+}
+
+@media (max-width: 480px) {
+  .calendarHeader h2 { font-size: 20px; }
+  .calendarHeader button { padding: 6px 10px; font-size: 12px; }
+  .day-number { font-size: 11px; }
+  .day-event-dot, .day-event-more { font-size: 8px; }
+}
