@@ -245,6 +245,42 @@
   z-index: 1;
 }
 
+.past-day {
+  color: #999;
+  background-color: #f9f9f9;
+  opacity: 0.6;
+}
+
+.past-day .day-event-rectangle,
+.past-day .day-event-wrapper,
+.past-day .day-event-more {
+  opacity: 0.6;
+}
+
+.past-day .add-event-fab {
+  opacity: 0.5;
+}
+
+.outside-month {
+  color: #666;                /* slightly darker grey than past days */
+  background-color: #ececec;  /* optional subtle darker background */
+  opacity: 0.8;  
+  pointer-events: none;             /* slightly faded but not too light */
+}
+
+/* Optional: fade events and add-event button for outside-month days */
+.outside-month .day-event-rectangle,
+.outside-month .day-event-wrapper,
+.outside-month .day-event-more {
+  opacity: 0.7;
+}
+
+.outside-month .add-event-fab {
+  opacity: 0.6;
+}
+
+
+
 
 /* ==============================
    ADD EVENT FAB
@@ -456,6 +492,27 @@
 /* ==============================
    RESPONSIVE
 ============================== */
+
+
+@keyframes modalGrow {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% {transform: scale(1); opacity: 1;}
+}
+
+@keyframes modalShrink {
+    0% { transform: scale(1); opacity: 1;}
+    100% { transform: scale(0.8); opacity: 0;}
+}
+
+
+.modal-open {
+    animation: modalGrow 0.25s ease-out forwards;
+}
+
+.modal-close {
+    animation: modalShrink 0.25s ease-out forwards;
+}
+
 @media (max-width: 768px) {
   .day-number {
     font-size: 12px;

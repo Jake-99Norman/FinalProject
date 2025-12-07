@@ -1,57 +1,107 @@
-.overflow-modal-overlay {
+/* ===== Overlay ===== */
+.overflow-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   z-index: 50;
+
+  /* fade in for overlay */
+  animation: fadeIn 0.2s ease;
 }
 
-.overflow-modal {
-  background-color: white;
-  width: 90%;
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ===== Modal Box ===== */
+.overflow-box {
+  background: #ffffff;
+  width: 92%;
   max-width: 420px;
-  max-height: 60vh; /* make it slightly bigger if needed */
-  border-radius: 6px;
-  overflow-y: auto; /* allow scrolling if too many events */
-  padding: 1rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  max-height: 65vh;
+  padding: 1rem 1.2rem;
+  border-radius: 14px;
+  overflow-y: auto;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+
+  /* new animation classes applied dynamically */
 }
 
-.overflow-modal-header {
+/* ===== Animation Hooks ===== */
+.modal-open {
+  animation: modalGrow 0.25s ease-out forwards;
+}
+
+.modal-close {
+  animation: modalShrink 0.25s ease-out forwards;
+}
+
+@keyframes modalGrow {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes modalShrink {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0; }
+}
+
+/* ===== Header ===== */
+.overflow-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
 }
 
-.overflow-events-name {
-  font-size: 1.2rem;
+.overflow-title {
+  font-size: 1.28rem;
   font-weight: 600;
+  color: #222;
 }
 
-.day-events-item {
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
+.overflow-close {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
   cursor: pointer;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 0.6rem; /* space between events */
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  color: white; /* text color to contrast with background color */
+  color: #333;
+  padding: 0.25rem;
+  transition: opacity 0.15s ease;
 }
 
-/* Example colors (adjust as needed) */
-.event-red { background-color: hsl(0, 70%, 50%); }
-.event-blue { background-color: hsl(210, 70%, 50%); }
-.event-green { background-color: hsl(120, 70%, 40%); }
-.event-yellow { background-color: hsl(50, 90%, 50%); }
-
-.day-events-item:hover {
-  transform: scale(1.03);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+.overflow-close:hover {
+  opacity: 0.65;
 }
+
+/* ===== Event List ===== */
+.overflow-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.overflow-item {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  width: 100%;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.overflow-item:hover {
+  transform: scale(1.035);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.22);
+}
+
+.color-red    { background-color: hsl(0, 70%, 52%); }
+.color-blue   { background-color: hsl(210, 70%, 55%); }
+.color-green  { background-color: hsl(135, 55%, 42%); }
+.color-yellow { background-color: hsl(48, 90%, 55%); }

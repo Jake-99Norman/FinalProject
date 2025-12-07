@@ -19,7 +19,7 @@ import { OverflowModal } from "./OverflowModal";
 import type { CalendarEvent } from "../../types/calendar";
 
 export function Calendar() {
-  // Load events from localStorage and convert dates to Date objects
+  // Load events from localStorage and convert dates back to Date objects
   const loadEvents = (): CalendarEvent[] => {
     const stored = JSON.parse(localStorage.getItem("calendarEvents") || "[]") as CalendarEvent[];
     return stored.map(e => ({ ...e, date: new Date(e.date) }));
@@ -29,44 +29,72 @@ export function Calendar() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
   const [eventToEdit, setEventToEdit] = useState<CalendarEvent | null>(null);
+
+  // ANIMATION STATES
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalClosing, setIsModalClosing] = useState(false);
+
   const [overflowData, setOverflowData] = useState<{ day: Date; events: CalendarEvent[] } | null>(null);
 
-  // Persist events to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem("calendarEvents", JSON.stringify(events));
   }, [events]);
 
-  function goToPrevMonth() { setCurrentMonth(prev => subMonths(prev, 1)); }
-  function goToNextMonth() { setCurrentMonth(prev => addMonths(prev, 1)); }
-  function goToToday() { setCurrentMonth(new Date()); }
+  // Navigation functions
+  function goToPrevMonth() {
+    setCurrentMonth(prev => subMonths(prev, 1));
+  }
+  function goToNextMonth() {
+    setCurrentMonth(prev => addMonths(prev, 1));
+  }
+  function goToToday() {
+    setCurrentMonth(new Date());
+  }
 
-  function handleDayClick(day: Date) { setSelectedDay(day); }
+  function handleDayClick(day: Date) {
+    setSelectedDay(day);
+  }
 
   function handleAddEvent(day: Date) {
     setSelectedDay(day);
     setEventToEdit(null);
-    setIsModalOpen(true);
+    openModal();
   }
 
   function handleEventClick(event: CalendarEvent) {
     setEventToEdit(event);
     setSelectedDay(event.date);
+    openModal();
+  }
+
+  // OPEN MODAL WITH ANIMATION
+  function openModal() {
+    setIsModalClosing(false);
     setIsModalOpen(true);
+  }
+
+  // CLOSE MODAL WITH ANIMATION
+  function closeModal() {
+    setIsModalClosing(true);
+    setTimeout(() => {
+      setIsModalOpen(false);
+      setIsModalClosing(false);
+    }, 250); // match CSS animation duration
   }
 
   function handleSaveEvent(event: CalendarEvent) {
     setEvents(prev => {
       const exists = prev.some(e => e.id === event.id);
-      if (exists) return prev.map(e => e.id === event.id ? event : e);
+      if (exists) return prev.map(e => (e.id === event.id ? event : e));
       return [...prev, event];
     });
-    setIsModalOpen(false);
+
+    closeModal();
   }
 
   function handleDeleteEvent(eventId: string) {
     setEvents(prev => prev.filter(e => e.id !== eventId));
-    setIsModalOpen(false);
+    closeModal();
   }
 
   function handleOpenOverflow(day: Date) {
@@ -77,14 +105,19 @@ export function Calendar() {
   const calendarDays = useMemo(() => {
     const start = startOfWeek(startOfMonth(currentMonth));
     const end = endOfWeek(endOfMonth(currentMonth));
+
     const days: Date[] = [];
     let day = start;
+
     while (day <= end) {
       days.push(day);
       day = addDays(day, 1);
     }
+
     return days;
   }, [currentMonth]);
+
+  const shouldRenderModal = isModalOpen || isModalClosing;
 
   return (
     <div className="calendar-layout">
@@ -109,14 +142,15 @@ export function Calendar() {
         />
       </div>
 
-      {isModalOpen && (
+      {shouldRenderModal && (
         <EventModal
-          isOpen={isModalOpen}
+          isOpen={isModalOpen}         // TRUE = modal-open animation, FALSE = modal-close animation
+          isClosing={isModalClosing}   // NEW PROP for controlling animation
           selectedDate={selectedDay}
           eventToEdit={eventToEdit}
           onSave={handleSaveEvent}
           onDelete={handleDeleteEvent}
-          onClose={() => setIsModalOpen(false)}
+          onClose={closeModal}
         />
       )}
 

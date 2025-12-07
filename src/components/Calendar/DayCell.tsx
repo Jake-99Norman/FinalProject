@@ -1,4 +1,4 @@
-import { format, isToday } from "date-fns"
+import { format, isToday, isBefore, startOfDay } from "date-fns"
 import type { CalendarEvent } from "../../types/calendar"
 
 type DayCellProps = {
@@ -24,14 +24,25 @@ export function DayCell({
   onOpenOverflow,
   showWeekday = false,
 }: DayCellProps) {
-  const today = isToday(day)
+  const today = startOfDay(new Date())
+  const isPast = isBefore(day, today)
+  const isTodayDay = isToday(day)
 
-  // Separate all-day and timed events
-  const allDayEvents = events.filter(e => e.allDay)
-  const timedEvents = events.filter(e => !e.allDay)
+  // Combine and sort events: all-day first, then timed events in chronological order
+  const combinedEvents = [...events].sort((a, b) => {
+    if (a.allDay && !b.allDay) return -1
+    if (!a.allDay && b.allDay) return 1
 
-  // Combine events for display, limit to 5
-  const combinedEvents = [...allDayEvents, ...timedEvents]
+    if (!a.allDay && !b.allDay) {
+      if (!a.startTime || !b.startTime) return 0
+      const [aH, aM] = a.startTime.split(":").map(Number)
+      const [bH, bM] = b.startTime.split(":").map(Number)
+      return aH - bH || aM - bM
+    }
+
+    return 0
+  })
+
   const visibleEvents = combinedEvents.slice(0, 5)
   const overflowCount = combinedEvents.length - visibleEvents.length
 
@@ -39,14 +50,14 @@ export function DayCell({
     <div
       className={`day-cell ${!isCurrentMonth ? "outside-month" : ""} ${
         isSelected ? "selected" : ""
-      }`}
-      onClick={onClick}
+      } ${isPast ? "past-day" : ""}`}
+      onClick={isCurrentMonth ? onClick : undefined} // disable click if outside month
     >
       {showWeekday && (
         <div className="calendar-weekday">{format(day, "EEE")}</div>
       )}
 
-      <div className={`day-number ${today ? "today" : ""}`}>
+      <div className={`day-number ${isTodayDay ? "today" : ""}`}>
         {day.getDate()}
       </div>
 

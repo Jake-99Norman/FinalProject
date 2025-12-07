@@ -5,5 +5,6 @@ export type CalendarEvent = {
     startTime: string
     endTime: string
     allDay: boolean
+    isClosing: boolean
     color: "blue" | "green" | "red"
 }
