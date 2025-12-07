@@ -1,13 +1,13 @@
-import { useState } from "react"
-import { Calendar } from "./components/Calendar/Calendar"
-import type { CalendarEvent } from "./types/calendar"
+import { Calendar } from "./components/Calendar/Calendar";
 
-import "./styles/calendar.css"
+import "./styles/calendar.css";
 
 function App() {
-  const [events, setEvents] = useState<CalendarEvent[]>([])
-
-  return <Calendar events={events} setEvents={setEvents} />
+  return (
+    <div className="App">
+      <Calendar />
+    </div>
+  );
 }
 
-export default App
+export default App;

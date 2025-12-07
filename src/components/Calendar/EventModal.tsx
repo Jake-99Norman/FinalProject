@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import type { CalendarEvent } from "../../types/calendar"
 
 type EventModalProps = {
   isOpen: boolean
-  selectedDate: Date
+  selectedDate: Date | string
   eventToEdit: CalendarEvent | null
   onSave: (event: CalendarEvent) => void
   onDelete: (id: string) => void
@@ -27,9 +27,13 @@ export function EventModal({
   const [endTime, setEndTime] = useState("")
   const [color, setColor] = useState<ColorOption>(COLOR_OPTIONS[0])
 
-  // Error states
   const [titleError, setTitleError] = useState("")
   const [timeError, setTimeError] = useState("")
+
+  // Ensure selectedDate is always a Date object
+  const safeDate = useMemo(() => {
+    return selectedDate instanceof Date ? selectedDate : new Date(selectedDate)
+  }, [selectedDate])
 
   useEffect(() => {
     if (eventToEdit) {
@@ -37,24 +41,23 @@ export function EventModal({
       setStartTime(eventToEdit.startTime || "")
       setEndTime(eventToEdit.endTime || "")
       setColor(eventToEdit.color || COLOR_OPTIONS[0])
+      setAllDay(eventToEdit.allDay)
     } else {
       setTitle("")
       setStartTime("")
       setEndTime("")
       setColor(COLOR_OPTIONS[0])
+      setAllDay(false)
     }
 
-    // Reset errors when modal opens
     setTitleError("")
     setTimeError("")
   }, [eventToEdit])
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-
     let hasError = false
 
-    // Title validation
     if (!title.trim()) {
       setTitleError("Event needs a name")
       hasError = true
@@ -62,7 +65,6 @@ export function EventModal({
       setTitleError("")
     }
 
-    // Time validation if not all-day
     if (!allDay) {
       if (!startTime || !endTime) {
         setTimeError("Start and end time are required")
@@ -79,14 +81,35 @@ export function EventModal({
 
     if (hasError) return
 
-    onSave({
+    const newEvent: CalendarEvent = {
       id: eventToEdit?.id || Date.now().toString(),
       title,
-      date: selectedDate,
+      date: safeDate,
       startTime: allDay ? "" : startTime,
       endTime: allDay ? "" : endTime,
       color,
-    })
+      allDay,
+    }
+
+    onSave(newEvent)
+
+    // Update localStorage
+    const stored = JSON.parse(localStorage.getItem("calendarEvents") || "[]") as CalendarEvent[]
+    const exists = stored.some(e => e.id === newEvent.id)
+    const updatedEvents = exists
+      ? stored.map(e => (e.id === newEvent.id ? newEvent : e))
+      : [...stored, newEvent]
+    localStorage.setItem("calendarEvents", JSON.stringify(updatedEvents))
+  }
+
+  function handleDelete() {
+    if (!eventToEdit) return
+
+    onDelete(eventToEdit.id)
+
+    const stored = JSON.parse(localStorage.getItem("calendarEvents") || "[]") as CalendarEvent[]
+    const updatedEvents = stored.filter(e => e.id !== eventToEdit.id)
+    localStorage.setItem("calendarEvents", JSON.stringify(updatedEvents))
   }
 
   if (!isOpen) return null
@@ -96,7 +119,7 @@ export function EventModal({
       <form className="modal" onSubmit={handleSubmit}>
         <div className="modal-header-container">
           <h2>{eventToEdit ? "Edit Event" : "Add Event"}</h2>
-          <div className="modal-date">{selectedDate.toLocaleDateString("en-US")}</div>
+          <div className="modal-date">{safeDate.toLocaleDateString("en-US")}</div>
           <button className="closeBtn" type="button" onClick={onClose}>
             X
           </button>
@@ -170,7 +193,7 @@ export function EventModal({
             <button
               type="button"
               className="delete-btn"
-              onClick={() => onDelete(eventToEdit.id)}
+              onClick={handleDelete}
             >
               Delete
             </button>

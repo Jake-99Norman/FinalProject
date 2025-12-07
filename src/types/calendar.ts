@@ -4,5 +4,6 @@ export type CalendarEvent = {
     date: Date
     startTime: string
     endTime: string
+    allDay: boolean
     color: "blue" | "green" | "red"
 }

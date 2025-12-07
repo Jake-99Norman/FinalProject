@@ -1,5 +1,15 @@
-import { useState, useMemo } from "react";
-import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, addMonths, subMonths, isSameDay, format } from "date-fns";
+import { useState, useMemo, useEffect } from "react";
+import {
+  startOfMonth,
+  endOfMonth,
+  startOfWeek,
+  endOfWeek,
+  addDays,
+  addMonths,
+  subMonths,
+  isSameDay,
+  format,
+} from "date-fns";
 
 import { CalendarHeader } from "./CalendarHeader";
 import { CalendarGrid } from "./CalendarGrid";
@@ -8,18 +18,24 @@ import { OverflowModal } from "./OverflowModal";
 
 import type { CalendarEvent } from "../../types/calendar";
 
-type CalendarProps = {
-  events: CalendarEvent[];
-  setEvents: React.Dispatch<React.SetStateAction<CalendarEvent[]>>;
-};
+export function Calendar() {
+  // Load events from localStorage and convert dates to Date objects
+  const loadEvents = (): CalendarEvent[] => {
+    const stored = JSON.parse(localStorage.getItem("calendarEvents") || "[]") as CalendarEvent[];
+    return stored.map(e => ({ ...e, date: new Date(e.date) }));
+  };
 
-export function Calendar({ events, setEvents }: CalendarProps) {
+  const [events, setEvents] = useState<CalendarEvent[]>(loadEvents);
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [selectedDay, setSelectedDay] = useState(new Date());
+  const [selectedDay, setSelectedDay] = useState<Date>(new Date());
   const [eventToEdit, setEventToEdit] = useState<CalendarEvent | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [overflowData, setOverflowData] = useState<{ day: Date; events: CalendarEvent[] } | null>(null);
+
+  // Persist events to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("calendarEvents", JSON.stringify(events));
+  }, [events]);
 
   function goToPrevMonth() { setCurrentMonth(prev => subMonths(prev, 1)); }
   function goToNextMonth() { setCurrentMonth(prev => addMonths(prev, 1)); }

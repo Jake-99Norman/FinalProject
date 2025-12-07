@@ -50,6 +50,7 @@
   gap: 16px;
   flex-wrap: wrap;
   padding: 0.25rem 0.5rem;
+  margin-bottom: .5rem;
 }
 
 .calendarHeader h2 {
@@ -148,32 +149,94 @@
 /* ==============================
    EVENTS
 ============================== */
-.day-event-dot {
-  font-size: 10px;
-  padding: 2px 4px;
+.day-cell {
+  position: relative;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 60px; 
+  cursor: pointer;
+  row-gap: 4px;
+}
+
+.add-event-fab {
+  align-self: flex-start;
+  margin-bottom: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.day-number {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.day-event-rectangle {
+  width: 95%;  
+  display: flex; 
+  align-items: center;
+  background-color: var(--event-color); 
   border-radius: 4px;
-  margin-top: 2px;
+  padding: 2px 4px;
+  font-size: 0.75rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  cursor: pointer;
-  z-index: 1;
-  color: var(--all-day-text);
+  margin-bottom: 2px;
 }
 
-.day-event-dot.red {
+.day-event-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 2px;
+  cursor: pointer;
+}
+
+.day-event-time{
+    font-size: 15px;
+    color: #555;
+    margin-right: 4px;
+}
+
+.day-event-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.day-event-title {
+  font-size: large;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.day-event-dot.red, .day-event-rectangle.red {
   background-color: var(--red-event);
 }
-.day-event-dot.blue {
+.day-event-dot.blue, .day-event-rectangle.blue {
   background-color: var(--blue-event);
 }
-.day-event-dot.green {
+.day-event-dot.green, .day-event-rectangle.green {
   background-color: var(--green-event);
 }
 
 .day-event-more {
-  font-size: 10px;
-  color: var(--blue-event);
+  font-size: 15px;
+  font-weight: bold;
+  color: black;
   cursor: pointer;
   margin-top: 2px;
   white-space: nowrap;
@@ -181,6 +244,7 @@
   text-overflow: ellipsis;
   z-index: 1;
 }
+
 
 /* ==============================
    ADD EVENT FAB
@@ -192,8 +256,7 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: var(--blue-event);
-  color: white;
+  color: #333;
   font-size: 20px;
   display: none;
   align-items: center;
@@ -208,9 +271,7 @@
   display: flex;
 }
 
-.add-event-fab:hover {
-  background-color: hsl(200, 80%, 40%);
-}
+
 
 /* ==============================
    MODAL
@@ -300,19 +361,6 @@
   width: 108px;
 }
 
-.time-row,
-.color-row {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.time-row label,
-.color-row label {
-  font-size: 12px;
-  display: block;
-  margin-bottom: 2px;
-  color: var(--modal-label-text);
-}
 
 .modal-actions {
   display: flex;
@@ -404,10 +452,6 @@
 .color-btn.selected {
   font-weight: bold;
 }
-
-
-
-
 
 /* ==============================
    RESPONSIVE
