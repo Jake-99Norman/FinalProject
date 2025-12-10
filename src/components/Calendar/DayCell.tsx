@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from "react"
 import { format, isToday, isBefore, startOfDay } from "date-fns"
 import type { CalendarEvent } from "../../types/calendar"
 
@@ -9,7 +10,7 @@ type DayCellProps = {
   onAddEvent: (day: Date) => void
   events: CalendarEvent[]
   onEventClick: (event: CalendarEvent) => void
-  onOpenOverflow: (day: Date) => void
+  onOpenOverflow: (day: Date, overflowEvents: CalendarEvent[]) => void
   showWeekday?: boolean
 }
 
@@ -24,11 +25,33 @@ export function DayCell({
   onOpenOverflow,
   showWeekday = false,
 }: DayCellProps) {
+  const dayCellRef = useRef<HTMLDivElement>(null)
+  const [maxVisibleEvents, setMaxVisibleEvents] = useState(5)
+
   const today = startOfDay(new Date())
   const isPast = isBefore(day, today)
   const isTodayDay = isToday(day)
 
-  // Combine and sort events: all-day first, then timed events in chronological order
+  // Dynamically calculate how many events can fit using ResizeObserver
+  useEffect(() => {
+    if (!dayCellRef.current) return
+
+    const observer = new ResizeObserver(() => {
+      if (!dayCellRef.current) return
+      const cellHeight = dayCellRef.current.offsetHeight
+      const headerHeight = 20 // space for date number
+      const addButtonHeight = 24 // space for + button
+      const eventHeight = 28 // estimated height per event
+      const availableHeight = cellHeight - headerHeight - addButtonHeight
+      const max = Math.max(0, Math.floor(availableHeight / eventHeight))
+      setMaxVisibleEvents(max)
+    })
+
+    observer.observe(dayCellRef.current)
+    return () => observer.disconnect()
+  }, [])
+
+  // Sort events: all-day first, then timed
   const combinedEvents = [...events].sort((a, b) => {
     if (a.allDay && !b.allDay) return -1
     if (!a.allDay && b.allDay) return 1
@@ -39,19 +62,19 @@ export function DayCell({
       const [bH, bM] = b.startTime.split(":").map(Number)
       return aH - bH || aM - bM
     }
-
     return 0
   })
 
-  const visibleEvents = combinedEvents.slice(0, 5)
-  const overflowCount = combinedEvents.length - visibleEvents.length
+  const visibleEvents = combinedEvents.slice(0, maxVisibleEvents)
+  const overflowEvents = combinedEvents.slice(maxVisibleEvents)
 
   return (
     <div
+      ref={dayCellRef}
       className={`day-cell ${!isCurrentMonth ? "outside-month" : ""} ${
         isSelected ? "selected" : ""
       } ${isPast ? "past-day" : ""}`}
-      onClick={isCurrentMonth ? onClick : undefined} // disable click if outside month
+      onClick={isCurrentMonth ? onClick : undefined} // disable click for outside-month
     >
       {showWeekday && (
         <div className="calendar-weekday">{format(day, "EEE")}</div>
@@ -62,15 +85,17 @@ export function DayCell({
       </div>
 
       {/* Add event button */}
-      <button
-        className="add-event-fab"
-        onClick={(ev) => {
-          ev.stopPropagation()
-          onAddEvent(day)
-        }}
-      >
-        +
-      </button>
+      {isCurrentMonth && (
+        <button
+          className="add-event-fab"
+          onClick={(ev) => {
+            ev.stopPropagation()
+            onAddEvent(day)
+          }}
+        >
+          +
+        </button>
+      )}
 
       {/* Render visible events */}
       {visibleEvents.map((e) => {
@@ -113,15 +138,15 @@ export function DayCell({
       })}
 
       {/* Overflow indicator */}
-      {overflowCount > 0 && (
+      {overflowEvents.length > 0 && isCurrentMonth && (
         <div
           className="day-event-more"
           onClick={(ev) => {
             ev.stopPropagation()
-            onOpenOverflow(day)
+            onOpenOverflow(day, overflowEvents)
           }}
         >
-          +{overflowCount} more
+          +{overflowEvents.length} more
         </div>
       )}
     </div>

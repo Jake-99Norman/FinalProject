@@ -23,8 +23,8 @@ export function CalendarGrid({
   onEventClick,
   onOpenOverflow,
 }: CalendarGridProps) {
-  // Get the start of the first week to determine which cells are the first row
-  const firstWeekStart = startOfWeek(days[0])
+
+    const firstWeekStart = startOfWeek(days[0])
 
   return (
     <div className="calendar-grid">

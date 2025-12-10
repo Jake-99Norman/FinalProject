@@ -15,15 +15,15 @@ export function CalendarHeader({
 }: CalendarHeaderProps) {
   return (
     <header className="calendarHeader">
-      <button className="btn todayBtn" onClick={goToToday}>
+      <button className="btn today-btn" onClick={goToToday}>
         Today
       </button>
 
-      <button className="btn prevBtn" onClick={goToPrevMonth}>
+      <button className="btn prev-btn" onClick={goToPrevMonth}>
         {"<"}
       </button>
 
-      <button className="btn nextBtn" onClick={goToNextMonth}>
+      <button className="btn next-btn" onClick={goToNextMonth}>
         {">"}
       </button>
 
