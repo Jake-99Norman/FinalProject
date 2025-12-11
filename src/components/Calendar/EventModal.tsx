@@ -3,7 +3,7 @@ import type { CalendarEvent } from "../../types/calendar";
 
 type EventModalProps = {
   isOpen: boolean;
-  isClosing: boolean;          // NEW PROP for animation
+  isClosing: boolean;          
   selectedDate: Date | string;
   eventToEdit: CalendarEvent | null;
   onSave: (event: CalendarEvent) => void;
@@ -32,12 +32,10 @@ export function EventModal({
   const [titleError, setTitleError] = useState("");
   const [timeError, setTimeError] = useState("");
 
-  // Ensure selectedDate is always a Date object
   const safeDate = useMemo(() => {
     return selectedDate instanceof Date ? selectedDate : new Date(selectedDate);
   }, [selectedDate]);
 
-  // Load event data when editing
   useEffect(() => {
     if (eventToEdit) {
       setTitle(eventToEdit.title);

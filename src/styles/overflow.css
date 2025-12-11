@@ -1,4 +1,3 @@
-/* ===== Overlay ===== */
 .overflow-overlay {
   position: fixed;
   inset: 0;
@@ -8,7 +7,6 @@
   align-items: center;
   z-index: 50;
 
-  /* fade in for overlay */
   animation: fadeIn 0.2s ease;
 }
 
@@ -17,7 +15,6 @@
   to { opacity: 1; }
 }
 
-/* ===== Modal Box ===== */
 .overflow-box {
   background: #ffffff;
   width: 92%;
@@ -28,10 +25,8 @@
   overflow-y: auto;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
 
-  /* new animation classes applied dynamically */
 }
 
-/* ===== Animation Hooks ===== */
 .modal-open {
   animation: modalGrow 0.25s ease-out forwards;
 }
@@ -50,7 +45,6 @@
   100% { transform: scale(0.8); opacity: 0; }
 }
 
-/* ===== Header ===== */
 .overflow-header {
   display: flex;
   justify-content: space-between;
@@ -78,7 +72,6 @@
   opacity: 0.65;
 }
 
-/* ===== Event List ===== */
 .overflow-list {
   display: flex;
   flex-direction: column;
@@ -104,4 +97,3 @@
 .color-red    { background-color: hsl(0, 70%, 52%); }
 .color-blue   { background-color: hsl(210, 70%, 55%); }
 .color-green  { background-color: hsl(135, 55%, 42%); }
-.color-yellow { background-color: hsl(48, 90%, 55%); }

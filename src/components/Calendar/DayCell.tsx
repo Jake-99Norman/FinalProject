@@ -40,9 +40,9 @@ export function DayCell({
       const cellHeight = dayCellRef.current.offsetHeight
       const headerHeight = 20 
       const addButtonHeight = 24 
-      const eventHeight = 28
+      const eventHeight = 28 
       const availableHeight = cellHeight - headerHeight - addButtonHeight
-      const max = Math.max(0, Math.floor(availableHeight / eventHeight) +2)
+      const max = Math.max(0, Math.floor(availableHeight / eventHeight))
       setMaxVisibleEvents(max)
     })
 
@@ -73,7 +73,7 @@ export function DayCell({
       className={`day-cell ${!isCurrentMonth ? "outside-month" : ""} ${
         isSelected ? "selected" : ""
       } ${isPast ? "past-day" : ""}`}
-      onClick={isCurrentMonth ? onClick : undefined} // disable click for outside-month
+      onClick={isCurrentMonth ? onClick : undefined}
     >
       {showWeekday && (
         <div className="calendar-weekday">{format(day, "EEE")}</div>
@@ -83,7 +83,6 @@ export function DayCell({
         {day.getDate()}
       </div>
 
-      {/* Add event button */}
       {isCurrentMonth && (
         <button
           className="add-event-fab"
