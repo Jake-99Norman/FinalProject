@@ -155,6 +155,7 @@ export function EventModal({
           <label>
             Start Time:
             <input
+             id="start-time"
               type="time"
               value={startTime}
               onChange={(e) => setStartTime(e.target.value)}
@@ -165,6 +166,7 @@ export function EventModal({
           <label>
             End Time:
             <input
+            id="endtime"
               type="time"
               value={endTime}
               onChange={(e) => setEndTime(e.target.value)}
@@ -175,7 +177,7 @@ export function EventModal({
           {timeError && <div className="error">{timeError}</div>}
         </div>
 
-        <label className="colorName" htmlFor="color">
+        <label className="colorName">
           Color
           <div className="color-options">
             {COLOR_OPTIONS.map((c) => (

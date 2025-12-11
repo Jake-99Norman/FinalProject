@@ -32,18 +32,17 @@ export function DayCell({
   const isPast = isBefore(day, today)
   const isTodayDay = isToday(day)
 
-  // Dynamically calculate how many events can fit using ResizeObserver
   useEffect(() => {
     if (!dayCellRef.current) return
 
     const observer = new ResizeObserver(() => {
       if (!dayCellRef.current) return
       const cellHeight = dayCellRef.current.offsetHeight
-      const headerHeight = 20 // space for date number
-      const addButtonHeight = 24 // space for + button
-      const eventHeight = 28 // estimated height per event
+      const headerHeight = 20 
+      const addButtonHeight = 24 
+      const eventHeight = 28
       const availableHeight = cellHeight - headerHeight - addButtonHeight
-      const max = Math.max(0, Math.floor(availableHeight / eventHeight))
+      const max = Math.max(0, Math.floor(availableHeight / eventHeight) +2)
       setMaxVisibleEvents(max)
     })
 
@@ -97,7 +96,6 @@ export function DayCell({
         </button>
       )}
 
-      {/* Render visible events */}
       {visibleEvents.map((e) => {
         if (e.allDay) {
           return (
@@ -137,7 +135,6 @@ export function DayCell({
         }
       })}
 
-      {/* Overflow indicator */}
       {overflowEvents.length > 0 && isCurrentMonth && (
         <div
           className="day-event-more"

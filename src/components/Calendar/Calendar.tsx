@@ -161,6 +161,7 @@ export function Calendar() {
 
   return (
     <div className="calendar-layout">
+      <div className="calendar-container">
       <CalendarHeader
         monthName={format(currentMonth, "MMM")}
         year={currentMonth.getFullYear()}
@@ -202,6 +203,7 @@ export function Calendar() {
           onEventClick={handleEventClick}
         />
       )}
+    </div>
     </div>
   )
 }

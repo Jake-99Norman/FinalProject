@@ -43,7 +43,7 @@ export function CalendarGrid({
             events={events.filter((e) => isSameDay(e.date, day))}
             onEventClick={onEventClick}
             onOpenOverflow={onOpenOverflow}
-            showWeekday={isFirstWeek} // pass this prop
+            showWeekday={isFirstWeek} 
           />
         )
       })}

@@ -36,41 +36,64 @@
 /* ==============================
    LAYOUT
 ============================== */
-.calendar-layout {
-  max-width: 1500px;
-  height: 100vh;
+.calendar-layout { 
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   color: var(--default-text);
+}
+
+.calendar-container {
+  padding-top: .5rem;
+  margin-right: .5rem;
+
+  height: 100vh;
+  width: 80vw;
+  max-width: 1500px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  overflow: hidden;
 }
 
 .calendarHeader {
   display: flex;
-  align-items: center;
   justify-content: flex-start;
+  align-items: flex-start;
   flex-wrap: wrap;
-  padding: 0.25rem 0.5rem;
-  margin-bottom: 0.5rem;
+  padding: 0.15rem 0.25rem;
+  margin-bottom: .35rem;
 }
 
 .calendarHeader h2 {
   font-size: 1.5rem;
   font-weight: 800;
   margin: 0;
+  padding: .1rem;
 }
 
-.calendarHeader button {
+.btn {
   border-radius: 6px;
   border: 1px solid var(--button-border);
   background: transparent;
   color: var(--default-text);
   cursor: pointer;
-  margin-top: 0;
+  margin-bottom: .5rem;
   padding: 6px 10px;
   transition: background 0.2s;
   font-weight: 800;
 }
+
+.prev-btn, .next-btn{
+  border: none;
+}
+
+
 
 .calendarHeader button:hover {
   background: var(--button-hover-bg);
@@ -79,9 +102,9 @@
 .calendar-body {
   display: flex;
   flex-direction: column;
-  flex: 1 1 auto;
+
   width: 100%;
-  max-width: 1500px;
+  height: 100%;
 }
 
 /* ==============================
@@ -189,7 +212,9 @@
   text-overflow: ellipsis;
   width: 100%;
   flex-shrink: 0;
-  margin-bottom: 2px;
+  min-height: 20px;
+  margin-bottom: 4px;
+  line-height: 1.1;
   color: var(--all-day-text);
 }
 
@@ -198,6 +223,8 @@
   cursor: pointer;
   color: var(--timed-event-text);
 }
+
+
 
 .day-event-time {
   font-size: 12px;
@@ -218,35 +245,38 @@
   overflow: hidden;
   text-overflow: ellipsis;
   flex: 1;
-  
 }
 
 .day-event-dot.red,
-.day-event-rectangle.red { background-color: var(--red-event); }
+.day-event-rectangle.red {
+  background-color: var(--red-event);
+}
 .day-event-dot.blue,
-.day-event-rectangle.blue { background-color: var(--blue-event); }
+.day-event-rectangle.blue {
+  background-color: var(--blue-event);
+}
 .day-event-dot.green,
-.day-event-rectangle.green { background-color: var(--green-event); }
+.day-event-rectangle.green {
+  background-color: var(--green-event);
+}
 
 .day-event-more {
   font-size: 12px;
   font-weight: bold;
   color: var(--blue-event);
   cursor: pointer;
-  margin-top: auto; /* stick to bottom */
+  margin-top: auto; 
   flex-shrink: 0;
 }
 
-/* ==============================
-   MODAL STYLES
-============================== */
+
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -259,7 +289,7 @@
   border-radius: 12px;
   width: 90%;
   max-width: 420px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   max-height: 80vh;
   display: flex;
   flex-direction: column;
@@ -356,16 +386,13 @@
   border: 1px solid var(--delete-btn-border);
   background: var(--delete-btn-bg);
   color: var(--delete-btn-text);
-
 }
 
 .delete-btn:hover {
   background: var(--delete-btn-hover-bg);
 }
 
-/* ==============================
-   COLOR PICKER DOTS
-============================== */
+
 .colorName {
   padding: 0.25rem;
   margin: 0.25rem 0;
@@ -396,31 +423,97 @@
   transform: scale(1.2);
   box-shadow: 0 0 8px currentColor;
 }
-.color-btn.red { background: var(--red-event); color: var(--red-event); }
-.color-btn.green { background: var(--green-event); color: var(--green-event); }
-.color-btn.blue { background: var(--blue-event); color: var(--blue-event); }
-.color-btn.selected { font-weight: bold; }
+.color-btn.red {
+  background: var(--red-event);
+  color: var(--red-event);
+}
+
+.color-btn.red:focus{
+  background-color: hsl(0, 75%, 50%);
+}
+
+.color-btn.green {
+  background: var(--green-event);
+  color: var(--green-event);
+}
+
+.color-btn.green:focus{
+  background-color: hsl(150, 80%, 20%);
+}
+
+.color-btn.blue {
+  background: var(--blue-event);
+  color: var(--blue-event);
+}
+
+.color-btn.blue:focus{
+  background-color: hsl(200, 80%, 40%);
+}
+
+.color-btn.selected {
+  font-weight: bold;
+}
 
 /* ==============================
    ANIMATIONS
 ============================== */
-@keyframes modalGrow { 0% { transform: scale(0.8); opacity: 0; } 100% {transform: scale(1); opacity: 1;} }
-@keyframes modalShrink { 0% { transform: scale(1); opacity: 1;} 100% { transform: scale(0.8); opacity: 0;} }
+@keyframes modalGrow {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes modalShrink {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+}
 
-.modal-open { animation: modalGrow 0.25s ease-out forwards; }
-.modal-close { animation: modalShrink 0.25s ease-out forwards; }
+
+
+
+.modal-open {
+  animation: modalGrow 0.25s ease-out forwards;
+}
+.modal-close {
+  animation: modalShrink 0.25s ease-out forwards;
+}
 
 /* ==============================
    RESPONSIVE
 ============================== */
 @media (max-width: 768px) {
-  .day-number { font-size: 12px; }
-  .day-event-dot, .day-event-more { font-size: 9px; }
+  .day-number {
+    font-size: 12px;
+  }
+  .day-event-dot,
+  .day-event-more {
+    font-size: 9px;
+  }
 }
 
 @media (max-width: 480px) {
-  .calendarHeader h2 { font-size: 20px; }
-  .calendarHeader button { font-size: 12px; padding: 6px 10px; }
-  .day-number { font-size: 11px; }
-  .day-event-dot, .day-event-more { font-size: 8px; }
+  .calendarHeader h2 {
+    font-size: 20px;
+  }
+  .calendarHeader button {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+  .day-number {
+    font-size: 11px;
+  }
+  .day-event-dot,
+  .day-event-more {
+    font-size: 8px;
+  }
 }
