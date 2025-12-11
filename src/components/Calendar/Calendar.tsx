@@ -163,7 +163,7 @@ export function Calendar() {
     <div className="calendar-layout">
       <div className="calendar-container">
       <CalendarHeader
-        monthName={format(currentMonth, "MMM")}
+        monthName={format(currentMonth, "MMMM")}
         year={currentMonth.getFullYear()}
         goToPrevMonth={goToPrevMonth}
         goToNextMonth={goToNextMonth}
