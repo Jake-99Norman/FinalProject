@@ -265,7 +265,7 @@
 
 .modal {
   background: white;
-  padding: 20px 20px 40px;
+  padding: 20px;
   border-radius: 12px;
   width: 90%;
   max-width: 420px;
@@ -280,12 +280,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
-  padding-bottom: 0.25rem;
+}
+
+.modal-title{
+  font-size: 30px;
 }
 
 .modal-date {
-  font-size: 22px;
+  font-size: 25px;
   color: var(--modal-date-text);
   margin-bottom: 12px;
   padding-top: 1rem;
@@ -307,7 +309,6 @@
   flex-direction: column;
   width: 100%;
   padding: 0.5rem;
-  margin: 0.5rem 0;
 }
 
 .all-day {
@@ -320,18 +321,19 @@
 .time-inputs {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin: 2rem 0;
-  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin: 1rem 0;
+  width: 100%;
 }
 
 .time-inputs label {
   margin-right: 6px;
-  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
 }
 
 .time-inputs input[type="time"] {
-  width: 108px;
+  width: 180px;
 }
 
 .modal-actions {
@@ -350,6 +352,7 @@
   border: none;
   cursor: pointer;
   transition: background 0.2s;
+  font-size: larger;
 }
 
 .modal-actions button[type="submit"] {

@@ -119,7 +119,7 @@ export function EventModal({
         onSubmit={handleSubmit}
       >
         <div className="modal-header-container">
-          <h2>{eventToEdit ? "Edit Event" : "Add Event"}</h2>
+          <h2 className="modal-title">{eventToEdit ? "Edit Event" : "Add Event"}</h2>
           <div className="modal-date">{safeDate.toLocaleDateString("en-US")}</div>
           <button className="closeBtn" type="button" onClick={onClose}>
             X
@@ -190,7 +190,7 @@ export function EventModal({
         </label>
 
         <div className="modal-actions">
-          <button type="submit">Save</button>
+          <button type="submit">Add</button>
           {eventToEdit && (
             <button type="button" className="delete-btn" onClick={handleDelete}>
               Delete
